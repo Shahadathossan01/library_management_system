@@ -2,6 +2,7 @@ const authService=require('../../../../lib/auth')
 const { generateToken } = require('../../../../lib/token')
 const register=async(req,res,next)=>{
     const {username,email,password}=req.body
+    if(!username || !email || !password) throw error('Invalid parameters')
     try{
         //register user
         const user=await authService.register({username,email,password})
@@ -27,7 +28,7 @@ const register=async(req,res,next)=>{
                 login: '/auth/login'
             }
         }
-        
+
         res.status(201).json(response)
 
     }catch(e){

@@ -5,7 +5,11 @@ const generateHash=async(payload,saltRound=10)=>{
     const hash=await bcrypt.hash(payload,salt)
     return hash;
 }
-
+const hashMatch=async(raw,hash)=>{
+    const result=await bcrypt.compare(raw,hash)
+    return result;
+}
 module.exports={
-    generateHash
+    generateHash,
+    hashMatch
 }

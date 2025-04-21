@@ -15,8 +15,6 @@ const userExit=async(email)=>{
 }
 
 const createUser=async({username,email,password,role='user'})=>{
-    if(!username || !email || !password) throw error('Invalid parameters')
-    
     //create user
     const user=new User({username,email,password,role})
     const profile=new Profile({user:user?._id})
