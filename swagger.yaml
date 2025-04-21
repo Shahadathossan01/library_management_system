@@ -1,0 +1,1876 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title:  Library Management System
+  description: >-
+    This is this Library Management System REST API Documentations. Its the proper gideline for this application API Endpoints.
+  contact:
+    name: S.H.Topu
+    url:  https://shahadat-hossen.com
+    email: shahadat@gmail.com
+
+servers:
+  - description: Dev
+    url: http://localhost:4000/api/v1
+
+tags:
+  - name: Auth
+    description: Authentication Endpoints (public)
+  - name: Book
+    description: Book Endpoints (public + private)
+  - name: Review
+    description: Review Endpoints (public + private)
+  - name: BookIssue
+    description: BookIssue Endpoints (private)
+  - name: User
+    description: User Endpoints (admin only)
+    
+paths:
+  '/auth/register':
+    post:
+      description: create a new account
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: shahadat hosen
+                email:
+                  type: string
+                  format: email
+                  example: shahadat@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: pass1234
+              required: [username,email,password]
+      responses:
+        '201':
+          description:  Register successful.
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Registration successful.
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: jflkdfsjoerempcwlkdmjvgjmldjmcerjj
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /auth/register
+                      login:
+                        type: string
+                        example: /auth/login
+        '400':
+          $ref: '#/components/responses/400_body'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/auth/login':
+    post:
+      description: Login to your account
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: shahadat@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: pass1234
+              required: [email,password]
+      responses:
+        '200':
+          description: Login successful
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: login successfully
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: djlfjdjdveiruoieoijlkfljljdoioeirjjdljjs
+                  links:
+                    type: object
+                    properties:
+                      self:
+                       type: string
+                       example: auth/login
+        '400':
+          $ref: '#/components/responses/400_body'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+          
+  '/books':
+    get:
+      description: Get all published books
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of books
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            name:
+                              type: string
+                              example: first book
+                            authorName:
+                              type: string
+                              example: first author
+                            image:
+                              type: string
+                              format: url
+                              example: http://aws.com
+                            inStock:
+                              type: integer
+                              format: int32
+                              example: 5
+                            status:
+                              type: string
+                              enum: [available,othersHand]
+                              example: available
+                            link:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  format: url
+                                  example: /books/1
+                                reviews:
+                                  type: string
+                                  format: url
+                                  example: /books/1/reviews
+                          required: [id,name,authorName,image,inStock,status]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /books?page=1&limit=10
+                      next:
+                        type: string
+                        format: url
+                        example: /books?page=2&limit=10
+                      prev:
+                        type: string
+                        format: url
+                        example: /books?page=1&limit=10
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      description: Create a new book 
+      tags: [Book]
+      requestBody:
+        description: To create a new book useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Securing APIs with JWT
+                authorName:
+                  type: string
+                  example: Sahadat Hosen
+                summary:
+                  type: string
+                  example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT). Aimed at web developers and backend engineers, it covers the fundamentals of JWT, token generation and validation, and best practices for authentication and authorization. Through real-world examples and step-by-step tutorials, readers will learn how to integrate JWT in various tech stacks, including Node.js, Express, and frontends like React. Whether you're building a small app or a large-scale system, this guide equips you with the tools to protect your endpoints and manage secure user sessions.
+                image:
+                  type: string
+                  format: url
+                  example: http://aws.avator.og
+                isStock:
+                  type: integer
+                  format: int32
+                  example: 2
+                status:
+                  type: string
+                  enum: [available,othersHand]
+                  example: available
+              required: [name,authorName,summary,image,isStock]
+      responses:
+        '201':
+          description: Successfully created a new book
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BookCreateDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/books/{id}':
+    get:
+      description: Fetch a single book
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: Expand review object
+          schema:
+            type: string
+            example: reviews
+      responses:
+        '200':
+          description: Single book view
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Book'
+                      - type: object
+                        properties:
+                          reviews:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Review'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /books/1
+                      reviews:
+                        type: string
+                        example: /books/1/reviews
+        '400':
+          $ref: '#/components/responses/400_query'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      description: create or update entire book
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To create a new book useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Securing APIs with JWT
+                authorName:
+                  type: string
+                  example: Sahadat Hosen
+                summary:
+                  type: string
+                  example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT). Aimed at web developers and backend engineers, it covers the fundamentals of JWT, token generation and validation, and best practices for authentication and authorization. Through real-world examples and step-by-step tutorials, readers will learn how to integrate JWT in various tech stacks, including Node.js, Express, and frontends like React. Whether you're building a small app or a large-scale system, this guide equips you with the tools to protect your endpoints and manage secure user sessions.
+                image:
+                  type: string
+                  format: url
+                  example: http://aws.avator.og
+                isStock:
+                  type: integer
+                  format: int32
+                  example: 2
+                status:
+                  type: string
+                  enum: [available,othersHand]
+                  example: available
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BookUpdatedDTO'
+        '201':
+          description: Successfully created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BookCreateDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - bearerAuth: []
+      description: Partially update an article
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To update a book useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Securing APIs with JWT
+                authorName:
+                  type: string
+                  example: Sahadat Hosen
+                summary:
+                  type: string
+                  example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT). Aimed at web developers and backend engineers, it covers the fundamentals of JWT, token generation and validation, and best practices for authentication and authorization. Through real-world examples and step-by-step tutorials, readers will learn how to integrate JWT in various tech stacks, including Node.js, Express, and frontends like React. Whether you're building a small app or a large-scale system, this guide equips you with the tools to protect your endpoints and manage secure user sessions.
+                image:
+                  type: string
+                  format: url
+                  example: http://aws.avator.og
+                isStock:
+                  type: integer
+                  format: int32
+                  example: 2
+                status:
+                  type: string
+                  enum: [available,othersHand]
+                  example: available
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BookUpdatedDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete an book by id
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: deleted book successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 204
+                  message:
+                    type: string
+                    example: deleted book successfully
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/books/{id}/reviews':
+    get:
+      description: Get this books all reviews
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Return a list of books
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            content:
+                              type: string
+                              example: It's a motivation book
+                            bookId:
+                              type: integer
+                              format: int32
+                              example: 1
+                            authorId:
+                              type: integer
+                              format: int32
+                              example: 1
+                            status:
+                              type: string
+                              enum: [public, private]
+                              example: public
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /reviews/1
+                                book:
+                                  type: string
+                                  example: /reviews/1/book
+                                author:
+                                  type: string
+                                  example: /reviews/1/author
+                          required: [id,content,author status]
+                        - $ref: '#/components/schemas/Timestamp'  
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /reviews?page=1&limit=10
+                      next:
+                        type: string
+                        format: url
+                        example: /reviews?page=2&limit=10
+                      prev:
+                        type: string
+                        format: url
+                        example: /reviews?page=1&limit=10
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      description: Create a new review
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To create a new review useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: Securing APIs with JWT
+                status:
+                  type: string
+                  enum: [public,private]
+                  example: public
+              required: [content]
+      responses:
+        '201':
+          description: Successfully created a new book
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ReviewCreateDTO'
+        '400':
+          $ref: '#/components/responses/400_query'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/books/{id}/author':
+    get:
+      description: Get author in this book
+      tags: [Book]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: books author
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthorDTO'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /users/1
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+          
+  '/reviews':
+    post:
+      security:
+        - bearerAuth: []
+      description: Create a new review 
+      tags: [Review]
+      requestBody:
+        description: To create a new review useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                bookId:
+                  type: integer
+                  format: int32
+                  example: 2
+                content:
+                  type: string
+                  example: this is a new review.
+                status:
+                  type: string
+                  enum: [public,private]
+                  example: public
+              required: [bookId,content,status]
+      responses:
+        '201':
+          description: Successfully created a new book
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ReviewCreateDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      description: Get all review also get by postId
+      tags: [Review]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/postIdParam'
+      responses:
+        '200':
+          description: Return a list of books
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            content:
+                              type: string
+                              example: It's a motivation book
+                            bookId:
+                              type: integer
+                              format: int32
+                              example: 1
+                            authorId:
+                              type: integer
+                              format: int32
+                              example: 1
+                            status:
+                              type: string
+                              enum: [public, private]
+                              example: public
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /reviews/1
+                                book:
+                                  type: string
+                                  example: /reviews/1/book
+                                author:
+                                  type: string
+                                  example: /reviews/1/author
+                          required: [id,content,author status]
+                        - $ref: '#/components/schemas/Timestamp'  
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /reviews?page=1&limit=10
+                      next:
+                        type: string
+                        format: url
+                        example: /reviews?page=2&limit=10
+                      prev:
+                        type: string
+                        format: url
+                        example: /reviews?page=1&limit=10
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'    
+  '/reviews/{id}':
+    patch:
+      security:
+        - bearerAuth: []
+      description: Partially update an Review
+      tags: [Review]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To update a review useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: this is updated content
+                status:
+                  type: string
+                  enum: [public,private]
+                  example: private
+      responses:
+        '200':
+          description: update review
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ReviewUpdatedDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete a review by id
+      tags: [Review]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: deleted review successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 204
+                  message:
+                    type: string
+                    example: deleted review successfully
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      description: Get a review by bookId
+      tags: [Review]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: Get review
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Review'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /reviews/1
+                      book:
+                        type: string
+                        example: /reviews/1/book 
+                      author:
+                        type: string
+                        example: /reviews/1/author 
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+  '/reviews/{id}/book':
+    get:
+      description: Fetch a single book
+      tags: [Review]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: Expand review object
+          schema:
+            type: string
+            example: reviews
+      responses:
+        '200':
+          description: Single book view
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Book'
+                      - type: object
+                        properties:
+                          reviews:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Review'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /books/1
+                      reviews:
+                        type: string
+                        example: /books/1/reviews
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/reviews/{id}/author':
+    get:
+      description: Get author in this book
+      tags: [Review]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: review author
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthorDTO'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /users/1
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  
+  '/bookIssues':
+    post:
+      security:
+        - bearerAuth: []
+      description: Create a new bookIssue
+      tags: [BookIssue]
+      requestBody:
+        description: To create a new bookIssue useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                bookId:
+                  type: integer
+                  format: int32
+                  example: 2
+                status:
+                  type: string
+                  enum: [pending,cancelled,overdue,returned,public_hand]
+                  example: pending
+              required: [name,authorName,summary,image,isStock]
+      responses:
+        '201':
+          description: Successfully created a new bookIssue
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BookIssueCreateDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      description: Get all published books
+      tags: [BookIssue]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+      responses:
+        '200':
+          description: Return a list of books
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            bookId:
+                              type: integer
+                              format: int32
+                              example: 1
+                            userId:
+                              type: integer
+                              format: int32
+                              example: 1
+                            status:
+                              type: string
+                              enum: [pending,cancelled,overdue,returned,public_hand]
+                              example: pending
+                            link:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  format: url
+                                  example: /bookIuuses/1
+                                book:
+                                  type: string
+                                  format: url
+                                  example: /bookIssues/1/book
+                                author:
+                                  type: string
+                                  format: url
+                                  example: /bookIssues/1/author
+                          required: [id,name,authorName,image,inStock,status]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /bookIssues?page=1&limit=10
+                      next:
+                        type: string
+                        format: url
+                        example: /bookIssues?page=2&limit=10
+                      prev:
+                        type: string
+                        format: url
+                        example: /bookIssues?page=1&limit=10
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/bookIssues/{id}':
+    patch:
+      security:
+        - bearerAuth: []
+      description: Partially update a BookIssue
+      tags: [BookIssue]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To update a bookIssue useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [pending,cancelled,overdue,returned,public_hand]
+                  example: pending
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BookIssueUpdatedDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete an bookIssue by id
+      tags: [BookIssue]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: deleted bookIssue successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 204
+                  message:
+                    type: string
+                    example: deleted bookIssue successfully
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      description: Get a bookIssue by id
+      tags: [BookIssue]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: Get bookIssue by id
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BookIssue'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /bookIssues/1
+                      book:
+                        type: string
+                        example: /bookIssues/1/book 
+                      author:
+                        type: string
+                        example: /bookIssues/1/author 
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+  '/bookIssues/{id}/book':
+    get:
+      description: Fetch a single book
+      tags: [BookIssue]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: Single book view
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Book'
+                      - type: object
+                        properties:
+                          reviews:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Review'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /books/1
+                      reviews:
+                        type: string
+                        example: /books/1/reviews
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/bookIssues/{id}/author':
+    get:
+      description: Get author in this bookIssue
+      tags: [BookIssue]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: bookIssues author
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthorDTO'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /users/1
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    
+  '/users':
+    get:
+      security:
+        - bearerAuth: []
+      description: Get all users
+      tags: [User]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of users
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuthorDTO'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users?page=1&limit=10
+                      next:
+                        type: string
+                        format: url
+                        example: /users?page=2&limit=10
+                      prev:
+                        type: string
+                        format: url
+                        example: /users?page=1&limit=10
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      description: create a new account
+      tags: [User]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: shahadat hosen
+                email:
+                  type: string
+                  format: email
+                  example: shahadat@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: pass1234
+                role:
+                  type: string
+                  enum: [user,admin]
+                  default: user
+              required: [username,email,password]
+      responses:
+        '201':
+          description:  Successfully Created New Account.
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Registration successful.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example:  1
+                      username:
+                        type: string
+                        example: shahadat hosen
+                      email:
+                        type: string
+                        example: example@gmail.com
+                      role:
+                        type: string
+                        enum: [user,admin]
+                        default: user
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /users
+                      login:
+                        type: string
+                        example: /auth/login
+        '400':
+          $ref: '#/components/responses/400_body'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{id}':
+    get:
+      security:
+        - bearerAuth: []
+      description: Get a user by id
+      tags: [User]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+
+      responses:
+        '200':
+          description: Return a user
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                      $ref: '#/components/schemas/AuthorDTO'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users/1
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - bearerAuth: []
+      description: Partially update a BookIssue
+      tags: [User]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To update a bookIssue useing valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: update username
+                firstName:
+                  type: string
+                  example: first name
+                lastName:
+                  type: string
+                  example: last name
+                city:
+                  type: string
+                  example: pakundia
+                village:
+                  type: string
+                  example: anwarkhali
+                phone:
+                  type: string
+                  example: 94854948354
+                dateOfBirth:
+                  type: string
+                  example: 17-05-2000
+                avator:
+                  type: string
+                  example: http://cloudinary
+                role:
+                  type: string
+                  enum: [user,admin]
+                  default: user
+                
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthorDTO'
+        '400':
+          $ref: '#/components/responses/400_body'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete user 
+      tags: [User]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: deleted user successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 204
+                  message:
+                    type: string
+                    example: deleted user successfully
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    
+    
+    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    '500':
+      description: Internal server error
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal server error
+              message:
+                type: string
+                example: We are sorry for the inconvenience. Please try again later.
+    '400_body':
+      description: Bad request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+                    in:
+                      type: string
+                      example: body                  
+    '400_query':
+      description: Bad request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: field data
+                    message:
+                      type: string
+                      example: Invalid field data
+                    in:
+                      type: string
+                      example: query                 
+    '401':
+      description: Unauthorized
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+              message:
+                type: string
+                example: You don't have the right permission.                  
+    '404':
+      description: Resource Not Found
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found                  
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      description: Current page number
+      schema:
+        type: integer
+        format: int32
+        example: 1
+    limitParam:
+      in: query
+      name: limit
+      description: Maximum items to be returned
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: Type of sort (asc or dsc)
+      schema:
+        type: string
+        enum: [asc,dsc]
+        example: dsc
+    sortByParam:
+      in: query
+      name: sort_by
+      description: Sort Key
+      schema:
+        type: string
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search
+      description: Search term
+      schema:
+        type: string
+        example: title
+    idPathParam:
+      in: path
+      name: id
+      required: true
+      description: Provide valid ID
+      schema:
+        type: integer
+        format: int32
+        example: 1
+    postIdParam:
+      in: query
+      name: postId
+      description: Current post
+      schema:
+        type: integer
+        format: int32
+        example: 1
+  schemas:
+    Timestamp:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: datetime
+          example: 2025-05-01T10:00:00Z
+        updatedAt:
+          type: string
+          format: datetime
+          example: 2025-05-01T10:00:00Z
+      required: [createdAt,updatedAt]
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 1
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        next:
+          type: integer
+          format: int32
+          example: 2
+        prev:
+          type: integer
+          format: int32
+          example: 1
+        totalPage:
+          type: integer
+          format: int32
+          example: 5
+        totalItems:
+          type: integer
+          format: int32
+          example: 50
+      required: [page,limit,totalPage,totalItems]  
+    AuthorDTO:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            username:
+              type: string
+              example: shahadat hosen
+            email:
+              type: string
+              example: Sahadat@gmail.com
+            role:
+              type: string
+              enum: [user,admin]
+            profile:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  example: 1
+                firstName:
+                  type: string
+                  example: shahadat
+                lastName:
+                  type: string
+                  example: hosen
+                city:
+                  type: string
+                  example: kishoregonj
+                village:
+                  type: string
+                  example: anwarkhali
+                phone:
+                  type: string
+                  example: 59437594379
+                dateOfBirth:
+                  type: string
+                  example: 17-05-2000
+                avator:
+                  type: string
+                  format: url
+                  example: http://aws.avator.og
+          required: [id,username,email,role,profile]
+        - $ref: '#/components/schemas/Timestamp'
+    Book:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            name:
+              type: string
+              example: shahadat
+            authorName:
+              type: string
+              example: Sahadat Hosen
+            summary:
+              type: string
+              example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT). Aimed at web developers and backend engineers, it covers the fundamentals of JWT, token generation and validation, and best practices for authentication and authorization. Through real-world examples and step-by-step tutorials, readers will learn how to integrate JWT in various tech stacks, including Node.js, Express, and frontends like React. Whether you're building a small app or a large-scale system, this guide equips you with the tools to protect your endpoints and manage secure user sessions.
+            image:
+              type: string
+              format: url
+              example: http://aws.avator.og
+            isStock:
+              type: integer
+              format: int32
+              example: 2
+            status:
+              type: string
+              enum: [available,othersHand]
+          required: [id,name,authorName,summary,image,isStock,status]
+        - $ref: '#/components/schemas/Timestamp'
+    BookCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: Book created successfully
+        data:
+          $ref: '#/components/schemas/Book'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: /books/1
+            reviews:
+              type: string
+              format: url
+              example: /books/1/reviews
+    BookUpdatedDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: book updated successfully
+        data:
+          $ref: '#/components/schemas/Book'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: /books/1
+            reviews:
+              type: string
+              example: /books/1/reviews
+    Review:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            content:
+              type: string
+              example: It's a motivation book
+            bookId:
+              type: integer
+              format: int32
+              example: 1
+            authorId:
+              type: integer
+              format: int32
+              example: 1
+            status:
+              type: string
+              enum: [public, private]
+              example: public
+          required: [id,content,author status]
+        - $ref: '#/components/schemas/Timestamp'
+    ReviewCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: Review created successfully
+        data:
+          $ref: '#/components/schemas/Review'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: /reviews/1
+            book:
+              type: string
+              example: /reviews/1/book
+            author:
+              type: string
+              example: /reviews/1/author
+    ReviewUpdatedDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Review updated successfully
+        data:
+          $ref: '#/components/schemas/Review'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: /reviews/1
+            book:
+              type: string
+              example: /reviews/1/book
+            author:
+              type: string
+              example: /reviews/1/author
+    BookIssue:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            bookId:
+              type: integer
+              format: int32
+              example: 1
+            userId:
+              type: integer
+              format: int32
+              example: 1
+            status:
+              type: string
+              enum: [pending,cancelled,overdue,returned,public_hand]
+          required: [id,bookId,userId,status]
+        - $ref: '#/components/schemas/Timestamp'
+    BookIssueCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: BookIssue created successfully
+        data:
+          $ref: '#/components/schemas/BookIssue'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: /bookIssues/1
+            book:
+              type: string
+              format: url
+              example: /bookIssues/1/book
+            author:
+              type: string
+              format: url
+              example: /bookIssues/1/author
+    BookIssueUpdatedDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: book updated successfully
+        data:
+          $ref: '#/components/schemas/BookIssue'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: /bookIssues/1
+            book:
+              type: string
+              example: /bookissures/1/book
+            author:
+              type: string
+              example: /bookissures/1/author
+              
+        
