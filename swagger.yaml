@@ -245,7 +245,7 @@ paths:
                   type: string
                   format: url
                   example: http://aws.avator.og
-                isStock:
+                inStock:
                   type: integer
                   format: int32
                   example: 2
@@ -253,7 +253,7 @@ paths:
                   type: string
                   enum: [available,othersHand]
                   example: available
-              required: [name,authorName,summary,image,isStock]
+              required: [name,authorName,summary,image,inStock]
       responses:
         '201':
           description: Successfully created a new book
