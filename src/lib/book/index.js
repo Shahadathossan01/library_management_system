@@ -1,3 +1,4 @@
+const defaults = require("../../config/defaults")
 const Book = require("../../model/Book")
 const error = require("../../utils/error")
 
@@ -10,9 +11,50 @@ const create=async({name,authorName,summary,image,inStock,status='available'})=>
     await book.save()
 
     return book?._doc
+}
 
+const findAllItems=async({
+    page=defaults.page,
+    limit=defaults.limit,
+    sort_type=defaults.sort_type,
+    sort_by=defaults.sort_by,
+    search=defaults.search
+})=>{
+    //sort books
+    const sortStr=`${sort_type==='dsc' ? '-' : ''}${sort_by}`;
+
+    //filter books
+    const filter={
+        $or:[
+            {name:{$regex: search, $options: 'i'}},
+            {authorName:{$regex: search, $options: 'i'}}
+        ]
+    }
+
+    const books=await Book.find(filter)
+        .sort(sortStr)
+        .skip(page*limit-limit)
+        .limit(limit)
+
+    return books.map(book=>({
+        ...book._doc
+    }))
+    
+}
+
+const count=({search=''})=>{
+    const filter={
+        $or:[
+            {name:{$regex: search, $options: 'i'}},
+            {authorName:{$regex: search, $options: 'i'}}
+        ]
+    }
+    
+    return Book.countDocuments(filter)
 }
 
 module.exports={
-    create
+    create,
+    findAllItems,
+    count
 }
