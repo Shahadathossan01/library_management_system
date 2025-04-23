@@ -1553,8 +1553,7 @@ components:
       required: true
       description: Provide valid ID
       schema:
-        type: integer
-        format: int32
+        type: string
         example: 1
     postIdParam:
       in: query

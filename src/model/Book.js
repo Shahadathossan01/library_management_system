@@ -29,6 +29,12 @@ const bookSchema=new Schema({
     }
 },{timestamps:true})
 
+bookSchema.virtual('reviews',{
+    ref:'Review',
+    localField: '_id',
+    foreignField: 'book'
+})
+
 const Book=model('Book',bookSchema)
 
 module.exports=Book;

@@ -32,6 +32,11 @@ const findAllItems=async({
     }
 
     const books=await Book.find(filter)
+        .populate({
+            path: 'reviews',
+            select: 'content user status createdAt updatedAt -_id',
+            strictPopulate:false
+        })
         .sort(sortStr)
         .skip(page*limit-limit)
         .limit(limit)
@@ -53,8 +58,29 @@ const count=({search=''})=>{
     return Book.countDocuments(filter)
 }
 
+const findSingleItem=async({id,expand})=>{
+    if(!id) throw error('Id is required')
+    
+    const book=await Book.findById(id)
+
+    //expand query will be a string like reviews
+    expand=expand.split(',').map((item)=>item.trim())
+
+    //if expand if equal reviews
+    if(expand.includes('reviews')){
+        await book.populate({
+            path: 'reviews',
+            select: 'content user status createdAt updatedAt -_id',
+            strictPopulate:false
+        })
+    }
+
+    return book._doc;
+}
+
 module.exports={
     create,
     findAllItems,
-    count
+    count,
+    findSingleItem
 }
