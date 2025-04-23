@@ -4,23 +4,18 @@ const {Schema,model}=mongoose
 const bookSchema=new Schema({
     name:{
         type: String,
-        required:true
     },
     authorName:{
         type: String,
-        required: true
     },
     summary:{
         type: String,
-        required:true
     },
     image:{
         type: String,
-        required: true
     },
     inStock:{
-        type: String,
-        required:true
+        type: Number,
     },
     status:{
         type: String,

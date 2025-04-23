@@ -342,7 +342,7 @@ paths:
                   type: string
                   format: url
                   example: http://aws.avator.og
-                isStock:
+                inStock:
                   type: integer
                   format: int32
                   example: 2
@@ -398,7 +398,7 @@ paths:
                   type: string
                   format: url
                   example: http://aws.avator.og
-                isStock:
+                inStock:
                   type: integer
                   format: int32
                   example: 2
@@ -564,8 +564,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-  '/books/{id}/author':
-    get:
+
       description: Get author in this book
       tags: [Book]
       parameters:
@@ -1673,7 +1672,7 @@ components:
               type: string
               format: url
               example: http://aws.avator.og
-            isStock:
+            inStock:
               type: integer
               format: int32
               example: 2

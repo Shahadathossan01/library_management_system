@@ -1,7 +1,8 @@
 const defaults = require("../../config/defaults")
 const Book = require("../../model/Book")
+const Review = require("../../model/Review")
 const error = require("../../utils/error")
-
+require('../../model/Review')
 const create=async({name,authorName,summary,image,inStock,status='available'})=>{
     //validate parameters
     if(!name || !authorName || !summary || !image || !inStock) throw error('Invalid Parameters',400)
@@ -63,6 +64,7 @@ const findSingleItem=async({id,expand})=>{
     
     const book=await Book.findById(id)
 
+    if(!book) throw error('Resource not found',404)
     //expand query will be a string like reviews
     expand=expand.split(',').map((item)=>item.trim())
 
@@ -78,9 +80,69 @@ const findSingleItem=async({id,expand})=>{
     return book._doc;
 }
 
+const updateItemPut=async({id,name,authorName,summary,image,inStock,status})=>{
+    if(!id) throw error('Id is required')
+    const book=await Book.findById(id)
+
+    if(!book){
+        const book=await create({name,authorName,summary,image,inStock,status})
+        return {
+            book:book,
+            code:201
+        }
+    }
+
+    const payload={
+        name:name || book.name,
+        authorName:authorName || book.authorName,
+        summary:summary || book.summary,
+        image:image || book.image,
+        inStock:inStock || book.inStock,
+        status:status || book.status
+    }
+    book.overwrite(payload)
+    await book.save()
+
+    return {book:book._doc,code:200}
+}
+
+const updateItemPatch=async({id,name,authorName,summary,image,inStock,status})=>{
+    const book=await Book.findById(id)
+    if(!book) throw error('Resource not found',404)
+    
+    const payload={
+        name,
+        authorName,
+        summary,
+        image,
+        inStock,
+        status
+    }
+
+    Object.keys(payload).forEach((key)=>{
+        book[key]=payload[key] ?? book[key]
+    })
+    await book.save()
+
+    return book._doc
+    
+}
+
+const removeItem=async({id})=>{
+    const book=await Book.findById(id)
+    if(!book) throw error('Resource not found',404)
+    
+    await Review.deleteMany({book:id})
+
+    return await Book.findByIdAndDelete(id)
+}
+
 module.exports={
     create,
     findAllItems,
     count,
-    findSingleItem
+    findSingleItem,
+    updateItemPut,
+    updateItemPatch,
+    removeItem
 }

@@ -4,10 +4,9 @@ const {Schema,model}=mongoose
 const reviewSchema=new Schema({
     content:{
         type: String,
-        required: true
     },
     status:{
-        type: Schema.Types.ObjectId,
+        type: String,
         enum: ['public','private'],
         default:'public'
         
@@ -15,12 +14,10 @@ const reviewSchema=new Schema({
     book:{
         type: Schema.Types.ObjectId,
         ref: 'Book',
-        required: true
     },
     user:{
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
     }
 },{timestamps:true})
 
