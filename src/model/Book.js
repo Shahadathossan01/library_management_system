@@ -22,7 +22,11 @@ const bookSchema=new Schema({
         enum: ['available','othersHand'],
         default: 'available'
     }
-},{timestamps:true})
+},{
+    timestamps:true,
+    toObject: {virtuals:true},
+    toJSON: {virtuals: true}
+})
 
 bookSchema.virtual('reviews',{
     ref:'Review',

@@ -8,7 +8,7 @@ const findSingleItem=async(req,res,next)=>{
     const validId=isValidObjectId(id)
     if(!validId) throw error('Invalid ID format',400)
     
-    const expand=req.query.exapnd || ''
+    const expand=req.query.expand || ''
 
     try{
         const book=await bookService.findSingleItem({id,expand})

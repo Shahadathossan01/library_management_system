@@ -20,7 +20,7 @@ app.use((error,_req,res,_next)=>{
     console.log(error)
     const message=error.message?error.message:'Server Error Occurred';
     const status=error.status?error.status:500;
-    res.status(status).json({message})
+    res.status(status).json({code:status,message})
 })
 
 module.exports=app;

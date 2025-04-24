@@ -544,10 +544,6 @@ paths:
                 content:
                   type: string
                   example: Securing APIs with JWT
-                status:
-                  type: string
-                  enum: [public,private]
-                  example: public
               required: [content]
       responses:
         '201':
@@ -565,33 +561,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-      description: Get author in this book
-      tags: [Book]
-      parameters:
-        - $ref: '#/components/parameters/idPathParam'
-      responses:
-        '200':
-          description: books author
-          content:
-            'application/json':
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/AuthorDTO'
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: /users/1
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-          
   '/reviews':
     post:
       security:

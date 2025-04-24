@@ -14,6 +14,17 @@ const generateToken=({payload,algorithm='HS256',secret=process.env.ACCESS_TOKEN_
     }
 }
 
+const verifyToken=({token,algorithm='HS256',secret=process.env.ACCESS_TOKEN_SECRET})=>{
+    
+    try{
+        return jwt.verify(token,secret,{algorithms:[algorithm]})
+    }catch(e){
+        console.log(e)
+        throw error('Internal server error')
+    }
+}
+
 module.exports={
-    generateToken
+    generateToken,
+    verifyToken
 }

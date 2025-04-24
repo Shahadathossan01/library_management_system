@@ -33,15 +33,12 @@ const findAllItems=async({
     }
 
     const books=await Book.find(filter)
-        .populate({
-            path: 'reviews',
-            select: 'content user status createdAt updatedAt -_id',
-            strictPopulate:false
-        })
         .sort(sortStr)
         .skip(page*limit-limit)
         .limit(limit)
 
+        if(books.length===0) throw error('Requested resource not found',404)
+    
     return books.map(book=>({
         ...book._doc
     }))
@@ -64,20 +61,18 @@ const findSingleItem=async({id,expand})=>{
     
     const book=await Book.findById(id)
 
-    if(!book) throw error('Resource not found',404)
-    //expand query will be a string like reviews
-    expand=expand.split(',').map((item)=>item.trim())
+    if(!book) throw error('Requested resource not found',404)
 
     //if expand if equal reviews
-    if(expand.includes('reviews')){
+    if(expand){
         await book.populate({
             path: 'reviews',
-            select: 'content user status createdAt updatedAt -_id',
+            select: 'content user status createdAt updatedAt _id',
             strictPopulate:false
         })
     }
 
-    return book._doc;
+    return book;
 }
 
 const updateItemPut=async({id,name,authorName,summary,image,inStock,status})=>{
