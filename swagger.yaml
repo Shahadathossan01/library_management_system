@@ -575,9 +575,8 @@ paths:
               type: object
               properties:
                 bookId:
-                  type: integer
-                  format: int32
-                  example: 2
+                  type: string
+                  example: 680949c945521cc1dffd9d03
                 content:
                   type: string
                   example: this is a new review.
@@ -1359,9 +1358,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-    
-    
-    
+       
 components:
   securitySchemes:
     bearerAuth:
@@ -1514,7 +1511,7 @@ components:
       description: Search term
       schema:
         type: string
-        example: title
+        example: ''
     idPathParam:
       in: path
       name: id
@@ -1706,9 +1703,8 @@ components:
               type: string
               example: It's a motivation book
             bookId:
-              type: integer
-              format: int32
-              example: 1
+              type: string
+              example: 680949c945521cc1dffd9d03
             authorId:
               type: integer
               format: int32

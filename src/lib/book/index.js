@@ -132,6 +132,13 @@ const removeItem=async({id})=>{
     return await Book.findByIdAndDelete(id)
 }
 
+const checkOwnership=async({resourceId})=>{
+    const book=await Book.findById(resourceId)
+    if(!book) throw error('Resource Not Found',400)
+    
+    return true;
+}
+
 module.exports={
     create,
     findAllItems,
@@ -139,5 +146,6 @@ module.exports={
     findSingleItem,
     updateItemPut,
     updateItemPatch,
-    removeItem
+    removeItem,
+    checkOwnership
 }

@@ -18,7 +18,9 @@ const findAllItems=async({id,page=defaults.page,
 
         const reviews=await Review.find({book:id})
             .populate({
-                path:'user'
+                path:'user',
+                select: 'username email role createdAt updatedAt _id',
+                strictPopulate:false
             })
             .sort(sortStr)
             .skip(page*limit-limit)

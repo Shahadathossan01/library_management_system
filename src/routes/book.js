@@ -1,15 +1,17 @@
 const router=require('express').Router()
 const {controllers:bookController}=require('../api/v1/book')
+const ownerShip = require('../api/v1/book/middleware/ownerShip')
 const authenticate = require('../middleware/authenticate')
+const authorize = require('../middleware/authorize')
 
 router
-    .post('/books',bookController.create)
+    .post('/books',authenticate,authorize(['admin']),bookController.create)
     .get('/books',bookController.findAllItems)
     .get('/books/:id',bookController.findSingleItem)
-    .put('/books/:id',bookController.updateItemPut)
-    .patch('/books/:id',bookController.updateItemPatch)
-    .delete('/books/:id',bookController.removeItem)
-    .post('/books/:id/reviews',authenticate,bookController.createReviewForBook)
+    .put('/books/:id',authenticate,authorize(['admin']),bookController.updateItemPut)
+    .patch('/books/:id',authenticate,authorize(['admin']),bookController.updateItemPatch)
+    .delete('/books/:id',authenticate,authorize(['admin']),ownerShip('Book'),bookController.removeItem)
+    .post('/books/:id/reviews',authenticate,authorize(['user']),bookController.createReviewForBook)
     .get('/books/:id/reviews',bookController.findReviewsByBookId)
 
 module.exports=router
