@@ -5,6 +5,7 @@ const authenticate = require('../middleware/authenticate')
 router
     .post('/reviews',authenticate,reviewController.create)
     .get('/reviews',reviewController.findAllItems)
+    .patch('/reviews/:id',reviewController.updateItemPatch)
 
 
 

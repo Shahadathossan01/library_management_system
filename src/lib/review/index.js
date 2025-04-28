@@ -38,8 +38,26 @@ const count=(id)=>{
     return Review.countDocuments(filter)
 }
 
+const updateItemPatch=async({id,content,status})=>{
+    const review=await Review.findById(id)
+    if(!review) throw error('Resource not found',400)
+    
+    const payload={
+        content,
+        status
+    }
+
+    Object.keys(payload).forEach((key)=>{
+        review[key]=payload[key] ?? review[key]
+    })
+
+    await review.save()
+
+    return review._doc;
+}
 module.exports={
     create,
     count,
-    findAllItems
+    findAllItems,
+    updateItemPatch
 };

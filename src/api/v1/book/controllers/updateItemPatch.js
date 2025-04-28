@@ -3,6 +3,7 @@ const error = require("../../../../utils/error")
 const bookService=require('../../../../lib/book')
 const updateItemPatch=async(req,res,next)=>{
     const {id}=req.params
+    if(!id) throw error('Invalid Parameters')
     const isValid=isValidObjectId(id)
     if(!isValid) throw error('Invalid id format',400)
     
