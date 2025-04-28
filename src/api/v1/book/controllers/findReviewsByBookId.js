@@ -3,11 +3,13 @@ const error = require("../../../../utils/error")
 const defaults = require("../../../../config/defaults")
 const reviewService=require('../../../../lib/review')
 const {query}=require('../../../../utils');
-const { reviewLinksGenerator } = require("../utils");
+const { reviewLinksGenerator } = require("../../../../utils/links");
+
 
 
 const findReviewsByBookId=async(req,res,next)=>{
     const {id}=req.params
+    if(!id) throw error('Invalid Parameters',400)
     const isValid=isValidObjectId(id)
     if(!isValid) throw error('Invalid id format',400)
 
@@ -26,7 +28,7 @@ const findReviewsByBookId=async(req,res,next)=>{
         })
 
         //generate pagination
-        const totalItems=await reviewService.count()
+        const totalItems=await reviewService.count(id)
         const pagination=query.getPagination({totalItems,limit,page})
 
 

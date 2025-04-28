@@ -4,7 +4,8 @@ const config={
     limit:10,
     sort_type:'dsc',
     sort_by:'updatedAt',
-    search:''
+    search:'',
+    bookId:''
 }
 
 module.exports=Object.freeze(config)

@@ -1,7 +1,7 @@
 const defaults = require("../../../../config/defaults")
 const bookService=require('../../../../lib/book')
 const {query}=require('../../../../utils');
-const { bookLinksGenerator } = require("../utils");
+const { bookLinksGenerator } = require("../../../../utils/links");
 const findAllItems=async(req,res,next)=>{
     const page=req.query.page || defaults.page;
     const limit=req.query.limit || defaults.limit;

@@ -15,8 +15,8 @@ const findAllItems=async({id,page=defaults.page,
         sort_by=defaults.sort_by,})=>{
 
         const sortStr=`${sort_type==='dsc' ? '-' : ''}${sort_by}`;
-
-        const reviews=await Review.find({book:id})
+        const filter=id? {book:id}:{}
+        const reviews=await Review.find(filter)
             .populate({
                 path:'user',
                 select: 'username email role createdAt updatedAt _id',
@@ -33,12 +33,13 @@ const findAllItems=async({id,page=defaults.page,
         }))
 }
 
-const count=()=>{
-    return Review.countDocuments()
+const count=(id)=>{
+    const filter=id? {book:id}:{}
+    return Review.countDocuments(filter)
 }
 
 module.exports={
     create,
-    findAllItems,
     count,
+    findAllItems
 };

@@ -608,8 +608,7 @@ paths:
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/sortTypeParam'
         - $ref: '#/components/parameters/sortByParam'
-        - $ref: '#/components/parameters/searchParam'
-        - $ref: '#/components/parameters/postIdParam'
+        - $ref: '#/components/parameters/bookId'
       responses:
         '200':
           description: Return a list of books
@@ -1512,6 +1511,13 @@ components:
       schema:
         type: string
         example: ''
+    bookId:
+      in: query
+      name: bookId
+      description: BookId
+      schema:
+        type: string
+        example: ''
     idPathParam:
       in: path
       name: id
@@ -1520,14 +1526,7 @@ components:
       schema:
         type: string
         example: 1
-    postIdParam:
-      in: query
-      name: postId
-      description: Current post
-      schema:
-        type: integer
-        format: int32
-        example: 1
+        
   schemas:
     Timestamp:
       type: object
