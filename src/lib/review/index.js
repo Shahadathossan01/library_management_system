@@ -55,9 +55,17 @@ const updateItemPatch=async({id,content,status})=>{
 
     return review._doc;
 }
+
+const removeItem=async(id)=>{
+    const review=await Review.findById(id)
+    if(!review) throw error('Resource not found')
+    
+    return await Review.findByIdAndDelete(id)
+}
 module.exports={
     create,
     count,
     findAllItems,
-    updateItemPatch
+    updateItemPatch,
+    removeItem
 };
