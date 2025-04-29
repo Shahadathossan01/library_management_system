@@ -10,6 +10,7 @@ router
     .delete('/bookIssues/:id',bookIssueController.removeItem)
     .get('/bookIssues/:id',bookIssueController.findSingleItem)
     .get('/bookIssues/:id/book',bookIssueController.findBookByBookIssueId)
+    .get('/bookIssues/:id/author',bookIssueController.findAuthorByBookIssueId)
 
 
 

@@ -1,6 +1,8 @@
 const { sort_type, sort_by } = require("../../config/defaults")
 const Book = require("../../model/Book")
 const BookIssue = require("../../model/BookIssue")
+const Profile = require("../../model/Profile")
+const User = require("../../model/User")
 const error = require("../../utils/error")
 
 const create=async({book,user,status='pending'})=>{
@@ -105,6 +107,33 @@ const findBookByBookIssueId=async({id,expand=''})=>{
 
     return book;
 }
+
+const findAuthor=async(id)=>{
+    const bookIssue=await BookIssue.findById(id)
+    if(!bookIssue) throw error('Review not found',400)
+
+    const user=await User.findById({_id:bookIssue.user})
+    if(!user) throw error('User not found',400)
+
+    const profile=await Profile.findOne(user)
+
+    const author={
+        _id:user._id,
+        username: user.username,
+        email:user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+    }
+
+    if(profile){
+        author.profile={
+            ...profile
+        }
+    }
+    
+    return author;
+}
 module.exports={
     create,
     findAllItems,
@@ -112,5 +141,6 @@ module.exports={
     updateItemPatch,
     removeItem,
     findSingleItem,
-    findBookByBookIssueId
+    findBookByBookIssueId,
+    findAuthor
 }
