@@ -1,6 +1,8 @@
 const defaults = require("../../config/defaults");
 const Book = require("../../model/Book");
+const Profile = require("../../model/Profile");
 const Review = require("../../model/Review");
+const User = require("../../model/User");
 const error = require("../../utils/error");
 
 const create=async({content,book,user,status='public'})=>{
@@ -108,6 +110,33 @@ const findBook = async (reviewId, expand = '') => {
 
     return book;
 };
+
+const findAuthor=async(reviewId)=>{
+    const review=await Review.findById(reviewId)
+    if(!review) throw error('Review not found',400)
+
+    const user=await User.findById({_id:review.user})
+    if(!user) throw error('User not found',400)
+
+    const profile=await Profile.findOne(user)
+
+    const author={
+        _id:user._id,
+        username: user.username,
+        email:user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+    }
+
+    if(profile){
+        author.profile={
+            ...profile
+        }
+    }
+    
+    return author;
+}
 module.exports={
     create,
     count,
@@ -115,5 +144,6 @@ module.exports={
     updateItemPatch,
     removeItem,
     findSingleItem,
-    findBook
+    findBook,
+    findAuthor
 };

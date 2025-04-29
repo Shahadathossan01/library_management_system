@@ -9,7 +9,7 @@ router
     .delete('/reviews/:id',reviewController.removeItem)
     .get('/reviews/:id',reviewController.findSingleItem)
     .get('/reviews/:id/book',reviewController.findBookByReviewId)
-
+    .get('/reviews/:id/author',reviewController.findAuthorByReviewId)
 
 
 module.exports=router
