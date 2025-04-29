@@ -92,7 +92,7 @@ const findSingleItem=async(id,expand='')=>{
 }
 
 const findBook = async (reviewId, expand = '') => {
-    console.log(expand)
+
     const review = await Review.findById(reviewId);
     if (!review) throw error('Review not found', 404);
 
@@ -100,7 +100,7 @@ const findBook = async (reviewId, expand = '') => {
     if (!book) throw error('Book not found', 404);
 
      //if expand if equal reviews
-     if(expand){
+     if(expand==='reviews'){
         await book.populate({
             path: 'reviews',
             select: 'content user status createdAt updatedAt _id',

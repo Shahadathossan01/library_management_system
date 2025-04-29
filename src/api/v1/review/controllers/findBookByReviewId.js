@@ -15,8 +15,10 @@ const findBookByReviewId=async(req,res,next)=>{
         
         const response={
             data:book,
-            links: `/${req.url}/${book._id}`,
-            reviews: `/${req.url}/${book._id}/reviews`
+            links:{
+                self: `/${req.url}/${book._id}`,
+                reviews: `/${req.url}/${book._id}/reviews`
+            }
         }
 
         res.status(200).json(response)

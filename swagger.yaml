@@ -1084,6 +1084,12 @@ paths:
       tags: [BookIssue]
       parameters:
         - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: Expand review object
+          schema:
+            type: string
+            example: reviews
       responses:
         '200':
           description: Single book view

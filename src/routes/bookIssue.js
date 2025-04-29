@@ -9,6 +9,7 @@ router
     .patch('/bookIssues/:id',bookIssueController.updateItemPatch)
     .delete('/bookIssues/:id',bookIssueController.removeItem)
     .get('/bookIssues/:id',bookIssueController.findSingleItem)
+    .get('/bookIssues/:id/book',bookIssueController.findBookByBookIssueId)
 
 
 
