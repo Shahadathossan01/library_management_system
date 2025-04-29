@@ -34,8 +34,26 @@ const count=()=>{
     return BookIssue.countDocuments()
 }
 
+const updateItemPatch=async({id,status})=>{
+
+    if(!id || !status) throw error('Invalid Parameters',400)
+
+    const bookIssue=await BookIssue.findById(id).populate({
+        path: 'book',
+        select: '_id name authorName summary image'
+    })
+
+    if(!bookIssue) throw error('Resource not found',404)
+    
+    bookIssue.status=status ?? bookIssue.status;
+    await bookIssue.save()
+
+    return bookIssue
+
+}
 module.exports={
     create,
     findAllItems,
-    count
+    count,
+    updateItemPatch
 }
