@@ -914,14 +914,27 @@ paths:
                               type: integer
                               format: int32
                               example: 1
-                            bookId:
-                              type: integer
-                              format: int32
-                              example: 1
-                            userId:
-                              type: integer
-                              format: int32
-                              example: 1
+                            book:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: 680f8fabe460c667ba960e08
+                                name:
+                                  type: string
+                                  example: Securing jwt
+                                authorName:
+                                  type: string
+                                  example: topu
+                                summary:
+                                  type: string
+                                  example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT).
+                                image: 
+                                  type: string
+                                  example: http://aws.avator.og
+                            user:
+                              type: string
+                              example: 6806a6146d53f18bd169bc08
                             status:
                               type: string
                               enum: [pending,cancelled,overdue,returned,public_hand]

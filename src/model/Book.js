@@ -25,7 +25,7 @@ const bookSchema=new Schema({
 },{
     timestamps:true,
     toObject: {virtuals:true},
-    toJSON: {virtuals: true}
+    toJSON: { virtuals: false, versionKey: false, getters: true }
 })
 
 bookSchema.virtual('reviews',{

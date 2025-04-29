@@ -8,17 +8,21 @@ const findAllItems=async(req,res,next)=>{
     const sort_type=req.query.sort_type || defaults.sort_type;
     const sort_by=req.query.sort_by || defaults.sort_by;
     try{
+        //get bookIssues
         const bookIssues=await bookIssueService.findAllItems({page,limit,sort_type,sort_by})
-        
+
+        //get transform bookIssues and generate HATEOAS links
         const data=query.getTransformedItems({
             items: bookIssues,
             selection:['_id','book','user','status','createdAt','updatedAt'],
             linkGenerator:bookIssueLinksGenerator
         })
 
+        //generate pagination
         const totalItems=await bookIssueService.count()
         const pagination=query.getPagination({totalItems,page,limit})
 
+        //generate links
         const links=query.getHATEOASForAllItems({
             url: req.url,
             path: req.path,
@@ -28,6 +32,7 @@ const findAllItems=async(req,res,next)=>{
             page
         })
 
+        //generate response
         const response={
             data,
             pagination,

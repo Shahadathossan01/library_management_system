@@ -12,18 +12,22 @@ const create=async({book,user,status='pending'})=>{
 }
 
 const findAllItems=async({page,limit,sort_type,sort_by})=>{
+    
     const sortStr=`${sort_type==='dsc' ? '-' :''}${sort_by}`
 
     const bookIssues=await BookIssue.find()
+        .populate({
+            path: 'book',
+            select: '_id name authorName summary image'
+        })
         .sort(sortStr)
         .skip(page*limit -limit)
         .limit(limit)
-    
-    if(bookIssues.length === 0)throw error('Requested Resource not found',400)
 
-    return bookIssues.map((bookIssue)=>({
-        ...bookIssue._doc
-    }))
+    if(bookIssues.length === 0)throw error('Requested Resource not found',400)
+    
+    return bookIssues;
+   
 }
 
 const count=()=>{
