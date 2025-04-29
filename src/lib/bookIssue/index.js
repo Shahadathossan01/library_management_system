@@ -58,10 +58,37 @@ const removeItem=async({id})=>{
 
     return await BookIssue.findByIdAndDelete(id)
 }
+
+const findSingleItem=async({id,expand=''})=>{
+    if(!id) throw error('Id is required',400)
+    
+    expand=expand.split(',').map((item)=>item.trim());
+
+    const bookIssue=await BookIssue.findById(id)
+    if(!bookIssue) throw error('Resource not found',404)
+
+    if(expand.includes('book')){
+        await bookIssue.populate({
+            path: 'book',
+            select: '_id name authorName summary image inStock status createdAt updatedAt',
+            strictPopulate: false
+        })
+    }
+    if(expand.includes('author')){
+        await bookIssue.populate({
+            path: 'user',
+            select: '_id username email role createdAt updatedAt',
+            strictPopulate: false
+        })
+    }
+
+    return bookIssue;
+}
 module.exports={
     create,
     findAllItems,
     count,
     updateItemPatch,
-    removeItem
+    removeItem,
+    findSingleItem
 }

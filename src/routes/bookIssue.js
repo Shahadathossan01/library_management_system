@@ -8,6 +8,7 @@ router
     .get('/bookIssues',bookIssueController.findAllItems)
     .patch('/bookIssues/:id',bookIssueController.updateItemPatch)
     .delete('/bookIssues/:id',bookIssueController.removeItem)
+    .get('/bookIssues/:id',bookIssueController.findSingleItem)
 
 
 
