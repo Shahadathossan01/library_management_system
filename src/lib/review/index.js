@@ -137,6 +137,13 @@ const findAuthor=async(reviewId)=>{
     
     return author;
 }
+
+const checkOwnership=async({resourceId})=>{
+    const review=await Review.findById(resourceId)
+    if(!review) throw error('Resource Not Found',400)
+    
+    return true;
+}
 module.exports={
     create,
     count,
@@ -145,5 +152,6 @@ module.exports={
     removeItem,
     findSingleItem,
     findBook,
-    findAuthor
+    findAuthor,
+    checkOwnership
 };

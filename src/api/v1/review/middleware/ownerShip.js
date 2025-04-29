@@ -1,8 +1,8 @@
-const bookService=require('../../../../lib/book')
+const reviewService=require('../../../../lib/review')
 const error = require('../../../../utils/error')
 const ownerShip=(model='')=>async(req,_res,next)=>{
-    if(model==='Book'){
-        const isOwner=await bookService.checkOwnership({resourceId: req.params.id})
+    if(model==='Review'){
+        const isOwner=await reviewService.checkOwnership({resourceId: req.params.id})
 
         if(isOwner){
             return next()
