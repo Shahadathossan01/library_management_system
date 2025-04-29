@@ -7,6 +7,7 @@ router
     .post('/bookIssues',authenticate,authorize(['user']),bookIssueController.create)
     .get('/bookIssues',bookIssueController.findAllItems)
     .patch('/bookIssues/:id',bookIssueController.updateItemPatch)
+    .delete('/bookIssues/:id',bookIssueController.removeItem)
 
 
 

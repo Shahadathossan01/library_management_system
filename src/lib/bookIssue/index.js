@@ -51,9 +51,17 @@ const updateItemPatch=async({id,status})=>{
     return bookIssue
 
 }
+
+const removeItem=async({id})=>{
+    const bookIssue=await BookIssue.findById(id)
+    if(!bookIssue) throw error('Resource not found',404)
+
+    return await BookIssue.findByIdAndDelete(id)
+}
 module.exports={
     create,
     findAllItems,
     count,
-    updateItemPatch
+    updateItemPatch,
+    removeItem
 }
