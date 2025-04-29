@@ -1,4 +1,5 @@
 const defaults = require("../../config/defaults");
+const Book = require("../../model/Book");
 const Review = require("../../model/Review");
 const error = require("../../utils/error");
 
@@ -87,11 +88,32 @@ const findSingleItem=async(id,expand='')=>{
     }
     
 }
+
+const findBook = async (reviewId, expand = '') => {
+    console.log(expand)
+    const review = await Review.findById(reviewId);
+    if (!review) throw error('Review not found', 404);
+
+    const book = await Book.findById(review.book);
+    if (!book) throw error('Book not found', 404);
+
+     //if expand if equal reviews
+     if(expand){
+        await book.populate({
+            path: 'reviews',
+            select: 'content user status createdAt updatedAt _id',
+            strictPopulate:false
+        })
+    }
+
+    return book;
+};
 module.exports={
     create,
     count,
     findAllItems,
     updateItemPatch,
     removeItem,
-    findSingleItem
+    findSingleItem,
+    findBook
 };
