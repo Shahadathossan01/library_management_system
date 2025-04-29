@@ -866,14 +866,13 @@ paths:
               type: object
               properties:
                 bookId:
-                  type: integer
-                  format: int32
+                  type: string
                   example: 2
                 status:
                   type: string
                   enum: [pending,cancelled,overdue,returned,public_hand]
                   example: pending
-              required: [name,authorName,summary,image,isStock]
+              required: [bookId]
       responses:
         '201':
           description: Successfully created a new bookIssue
