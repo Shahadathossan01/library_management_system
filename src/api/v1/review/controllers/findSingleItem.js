@@ -1,24 +1,26 @@
-const isValidObjectId = require("../../../../utils/isValidObjectId");
-const bookService=require('../../../../lib/book');
-const error = require("../../../../utils/error");
+const error = require("../../../../utils/error")
+const isValidObjectId = require("../../../../utils/isValidObjectId")
+const reviewService=require('../../../../lib/review')
 const findSingleItem=async(req,res,next)=>{
     const {id}=req.params
     if(!id) throw error('Id is required',400)
-    //check id is valid object id
+    
     const validId=isValidObjectId(id)
     if(!validId) throw error('Invalid ID format',400)
     
     const expand=req.query.expand || ''
 
     try{
-        const book=await bookService.findSingleItem({id,expand})
+        //find review
+        const review=await reviewService.findSingleItem(id,expand)
 
         //generate response
         const response={
-            data: book,
+            data: review,
             links:{
-                self:`/books/${book._id}`,
-                reviews:`/books/${book._id}/reviews`
+                self:`/${req.url}/${review._id}`,
+                book:`/${req.url}/${review._id}/book`,
+                author:`/${req.url}/${review._id}/author`,
             }
         }
 
@@ -26,7 +28,6 @@ const findSingleItem=async(req,res,next)=>{
     }catch(e){
         next(e)
     }
-
 }
 
 module.exports=findSingleItem;

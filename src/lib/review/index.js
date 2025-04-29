@@ -62,10 +62,36 @@ const removeItem=async(id)=>{
     
     return await Review.findByIdAndDelete(id)
 }
+
+const findSingleItem=async(id,expand='')=>{
+    const review=await Review.findById(id)
+
+    if(!review) throw error('Resource not found',404)
+    
+    //generate exapnd array
+    expand=expand.split(',').map((item)=>item.trim())
+    
+    //when expand is book
+    if (expand.includes('book')) {
+        await review.populate('book', 'name authorName summary image inStock status _id');
+    }
+
+    //whenn expand is author
+    if (expand.includes('author')) {
+        await review.populate('user', 'username email role createdAt _id');
+    }
+
+
+    return {
+        ...review._doc
+    }
+    
+}
 module.exports={
     create,
     count,
     findAllItems,
     updateItemPatch,
-    removeItem
+    removeItem,
+    findSingleItem
 };

@@ -749,6 +749,12 @@ paths:
       tags: [Review]
       parameters:
         - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: Expand book and author object
+          schema:
+            type: string
+            example: book,author
       responses:
         '200':
           description: Get review

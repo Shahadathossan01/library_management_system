@@ -5,7 +5,7 @@ const updateItemPatch=async(req,res,next)=>{
 
     //check id is exit or not.
     const {id}=req.params
-    if(!id) throw error('Invalid Parameters',400)
+    if(!id) throw error('Id is required',400)
     
     //if id exit then check id format (mongoose object)
     const isValid=isValidObjectId(id)

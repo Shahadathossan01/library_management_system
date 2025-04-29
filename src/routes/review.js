@@ -7,6 +7,7 @@ router
     .get('/reviews',reviewController.findAllItems)
     .patch('/reviews/:id',reviewController.updateItemPatch)
     .delete('/reviews/:id',reviewController.removeItem)
+    .get('/reviews/:id',reviewController.findSingleItem)
 
 
 
