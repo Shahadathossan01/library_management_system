@@ -1,3 +1,4 @@
+const { sort_type, sort_by } = require("../../config/defaults")
 const BookIssue = require("../../model/BookIssue")
 const error = require("../../utils/error")
 
@@ -10,6 +11,27 @@ const create=async({book,user,status='pending'})=>{
     return bookIssue._doc;
 }
 
+const findAllItems=async({page,limit,sort_type,sort_by})=>{
+    const sortStr=`${sort_type==='dsc' ? '-' :''}${sort_by}`
+
+    const bookIssues=await BookIssue.find()
+        .sort(sortStr)
+        .skip(page*limit -limit)
+        .limit(limit)
+    
+    if(bookIssues.length === 0)throw error('Requested Resource not found',400)
+
+    return bookIssues.map((bookIssue)=>({
+        ...bookIssue._doc
+    }))
+}
+
+const count=()=>{
+    return BookIssue.countDocuments()
+}
+
 module.exports={
-    create
+    create,
+    findAllItems,
+    count
 }

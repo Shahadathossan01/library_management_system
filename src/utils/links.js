@@ -9,7 +9,15 @@ const reviewLinksGenerator=(item)=>{
     const links={
         self:`/reviews/${item._id}`,
         book:`/reviews/${item._id}/book`,
-        user: `/reviews/${item._id}/user`,
+        author: `/reviews/${item._id}/user`,
+    }
+    return links;
+}
+const bookIssueLinksGenerator=(item)=>{
+    const links={
+        self:`/reviews/${item._id}`,
+        book:`/reviews/${item._id}/book`,
+        author: `/reviews/${item._id}/user`,
     }
     return links;
 }
@@ -17,5 +25,6 @@ const reviewLinksGenerator=(item)=>{
 
 module.exports={
     bookLinksGenerator,
-    reviewLinksGenerator
+    reviewLinksGenerator,
+    bookIssueLinksGenerator
 }

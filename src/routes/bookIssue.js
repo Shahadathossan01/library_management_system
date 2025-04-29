@@ -5,6 +5,7 @@ const router=require('express').Router()
 
 router
     .post('/bookIssues',authenticate,authorize(['user']),bookIssueController.create)
+    .get('/bookIssues',bookIssueController.findAllItems)
 
 
 module.exports=router
