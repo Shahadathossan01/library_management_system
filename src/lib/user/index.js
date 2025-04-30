@@ -23,8 +23,54 @@ const createUser=async({username,email,password,role='user'})=>{
     return user._doc
 }
 
+const findAllItems=async({
+    page=defaults.page,
+    sort_type=defaults.sort_type,
+    limit=defaults.limit,
+    search=defaults.search,
+    sort_by=defaults.sort_by
+})=>{
+    const sortStr=`${sort_type==='dsc' ? '-' : ''}${sort_by}`;
+
+     //filter books
+     const filter={
+        $or:[
+            {username:{$regex: search, $options: 'i'}},
+            {phone:{$regex: search, $options: 'i'}}
+        ]
+    }
+
+    const user=await User.find(filter)
+        .populate({
+            path: 'profile',
+            select:'firstName lastName city village phone dateOfBirth avator',
+            strictPopulate:false
+        })
+        .sort(sortStr)
+        .skip(page*limit - limit)
+        .limit(limit)
+    
+    return user;
+
+    
+}
+
+const count=({search=''})=>{
+    const filter={
+        $or:[
+            {username:{$regex: search, $options: 'i'}},
+            {phone:{$regex: search, $options: 'i'}}
+        ]
+    }
+
+    return User.countDocuments(filter)
+}
+
 module.exports={
     findUserByEmail,
     userExit,
-    createUser
+    createUser,
+    findAllItems,
+    count
+
 }
