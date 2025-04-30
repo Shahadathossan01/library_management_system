@@ -115,27 +115,17 @@ const findAuthor=async(reviewId)=>{
     const review=await Review.findById(reviewId)
     if(!review) throw error('Review not found',400)
 
-    const user=await User.findById({_id:review.user})
-    if(!user) throw error('User not found',400)
+    const user=await User.findOne({_id:review.user})
+    .select('-password')
+    .populate({
+        path: 'profile',
+        select:'firstName lastName city village phone dateOfBirth avator -user',
+        strictPopulate:false
+    })
 
-    const profile=await Profile.findOne(user)
-
-    const author={
-        _id:user._id,
-        username: user.username,
-        email:user.email,
-        role: user.role,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-    }
-
-    if(profile){
-        author.profile={
-            ...profile
-        }
-    }
+    if(!user) throw error('User not found',400) 
     
-    return author;
+    return user;
 }
 
 const checkOwnership=async({resourceId})=>{

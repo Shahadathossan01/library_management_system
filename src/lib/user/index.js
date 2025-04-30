@@ -159,6 +159,14 @@ const findBookIssuesByUserId=async({id,page,limit,sort_type,sort_by})=>{
     
     return bookIssues;
 }
+
+const checkOwnership=async({resourceId})=>{
+    const user=await User.findById(resourceId)
+    if(!user) throw error('Resource Not Found',400)
+    
+    return true;
+}
+
 module.exports={
     findUserByEmail,
     userExit,
@@ -168,6 +176,7 @@ module.exports={
     findSingleItem,
     updateItemPatch,
     removeItem,
-    findBookIssuesByUserId
+    findBookIssuesByUserId,
+    checkOwnership
 
 }

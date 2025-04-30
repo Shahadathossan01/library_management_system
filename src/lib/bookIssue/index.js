@@ -118,27 +118,24 @@ const findAuthor=async(id)=>{
     const bookIssue=await BookIssue.findById(id)
     if(!bookIssue) throw error('Review not found',400)
 
-    const user=await User.findById({_id:bookIssue.user})
-    if(!user) throw error('User not found',400)
-
-    const profile=await Profile.findOne(user)
-
-    const author={
-        _id:user._id,
-        username: user.username,
-        email:user.email,
-        role: user.role,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-    }
-
-    if(profile){
-        author.profile={
-            ...profile
-        }
-    }
+        const user=await User.findOne({_id:bookIssue.user})
+        .select('-password')
+        .populate({
+            path: 'profile',
+            select:'firstName lastName city village phone dateOfBirth avator -user',
+            strictPopulate:false
+        })
     
-    return author;
+        if(!user) throw error('User not found',400) 
+        
+        return user;
+}
+
+const checkOwnership=async({resourceId})=>{
+    const bookIssue=await BookIssue.findById(resourceId)
+    if(!bookIssue) throw error('Resource Not Found',400)
+    
+    return true;
 }
 module.exports={
     create,
@@ -148,5 +145,6 @@ module.exports={
     removeItem,
     findSingleItem,
     findBookByBookIssueId,
-    findAuthor
+    findAuthor,
+    checkOwnership
 }

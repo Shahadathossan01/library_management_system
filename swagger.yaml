@@ -889,6 +889,8 @@ paths:
         '500':
           $ref: '#/components/responses/500'
     get:
+      security:
+        - bearerAuth: []
       description: Get all published books
       tags: [BookIssue]
       parameters:
@@ -1060,6 +1062,8 @@ paths:
         '500':
           $ref: '#/components/responses/500'
     get:
+      security:
+        - bearerAuth: []
       description: Get a bookIssue by id
       tags: [BookIssue]
       parameters:
@@ -1407,6 +1411,8 @@ paths:
           $ref: '#/components/responses/500'
   '/users/{id}/bookIssues':
     get:
+      security:
+        - bearerAuth: []
       description: Get this books all reviews
       tags: [User]
       parameters:
