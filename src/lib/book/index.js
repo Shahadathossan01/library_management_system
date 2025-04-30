@@ -72,6 +72,8 @@ const findSingleItem=async({id,expand})=>{
         })
     }
 
+    delete book.id
+
     return book;
 }
 

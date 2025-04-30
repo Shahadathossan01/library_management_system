@@ -12,7 +12,7 @@ const findSingleItem=async(req,res,next)=>{
 
     try{
         const book=await bookService.findSingleItem({id,expand})
-
+        // console.log(book)
         //generate response
         const response={
             data: book,
@@ -21,6 +21,8 @@ const findSingleItem=async(req,res,next)=>{
                 reviews:`/books/${book._id}/reviews`
             }
         }
+
+        // console.log('check controller response',response)
 
         res.status(200).json(response)
     }catch(e){
