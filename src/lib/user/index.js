@@ -66,11 +66,24 @@ const count=({search=''})=>{
     return User.countDocuments(filter)
 }
 
+const findSingleItem=async(id)=>{
+    const user=await User.findById(id)
+    .select('-password')
+    .populate({
+        path: 'profile',
+        select:'firstName lastName city village phone dateOfBirth avator -user',
+        strictPopulate:false
+    })
+
+    return user;
+}
+
 module.exports={
     findUserByEmail,
     userExit,
     createUser,
     findAllItems,
-    count
+    count,
+    findSingleItem
 
 }
