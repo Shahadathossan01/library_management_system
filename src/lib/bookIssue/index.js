@@ -21,7 +21,11 @@ const findAllItems=async({page,limit,sort_type,sort_by})=>{
     const bookIssues=await BookIssue.find()
         .populate({
             path: 'book',
-            select: '_id name authorName summary image'
+            select: '_id name authorName summary image createdAt updatedAt'
+        })
+        .populate({
+            path: 'user',
+            select: '_id username email role createdAt updatedAt'
         })
         .sort(sortStr)
         .skip(page*limit -limit)

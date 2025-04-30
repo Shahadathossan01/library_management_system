@@ -932,9 +932,27 @@ paths:
                                 image: 
                                   type: string
                                   example: http://aws.avator.og
+                                createdAt:
+                                  type: string
+                                  example: 2025-05-01T10:00:00.000Z
+                                updatedAt:
+                                  type: string
+                                  example: 2025-05-01T10:00:00.000Z
                             user:
-                              type: string
-                              example: 6806a6146d53f18bd169bc08
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: 680f8fabe460c667ba960e08
+                                username:
+                                  type: string
+                                  example: shahadat hossen
+                                email:
+                                  type: string
+                                  example: topu@gmail.com
+                                role:
+                                  type: string
+                                  example: user
                             status:
                               type: string
                               enum: [pending,cancelled,overdue,returned,public_hand]
@@ -1148,7 +1166,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-    
+  
   '/users':
     get:
       security:
@@ -1387,7 +1405,117 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-       
+  '/users/{id}/bookIssues':
+    get:
+      description: Get this books all reviews
+      tags: [User]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+      responses:
+        '200':
+          description: Return a list of books
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            book:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: 680f8fabe460c667ba960e08
+                                name:
+                                  type: string
+                                  example: Securing jwt
+                                authorName:
+                                  type: string
+                                  example: topu
+                                summary:
+                                  type: string
+                                  example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT).
+                                image: 
+                                  type: string
+                                  example: http://aws.avator.og
+                                createdAt:
+                                  type: string
+                                  example: 2025-05-01T10:00:00.000Z
+                                updatedAt:
+                                  type: string
+                                  example: 2025-05-01T10:00:00.000Z
+                            user:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: 680f8fabe460c667ba960e08
+                                username:
+                                  type: string
+                                  example: shahadat hossen
+                                email:
+                                  type: string
+                                  example: topu@gmail.com
+                                role:
+                                  type: string
+                                  example: user
+                            status:
+                              type: string
+                              enum: [pending,cancelled,overdue,returned,public_hand]
+                              example: pending
+                            link:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  format: url
+                                  example: /bookIuuses/1
+                                book:
+                                  type: string
+                                  format: url
+                                  example: /bookIssues/1/book
+                                author:
+                                  type: string
+                                  format: url
+                                  example: /bookIssues/1/author
+                          required: [id,name,authorName,image,inStock,status]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /bookIssues?page=1&limit=10
+                      next:
+                        type: string
+                        format: url
+                        example: /bookIssues?page=2&limit=10
+                      prev:
+                        type: string
+                        format: url
+                        example: /bookIssues?page=1&limit=10
+        '400':
+          $ref: '#/components/responses/400_query'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
 components:
   securitySchemes:
     bearerAuth:
