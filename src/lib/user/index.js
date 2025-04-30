@@ -135,6 +135,30 @@ const removeItem=async(id)=>{
 
 
 }
+
+const findBookIssuesByUserId=async({id,page,limit,sort_type,sort_by})=>{
+        const user=await User.findById(id)
+        if(!user) throw error('User not found',400)
+
+        const sortStr=`${sort_type==='dsc' ? '-' :''}${sort_by}`
+
+        const bookIssues=await BookIssue.find({user:user._id})
+        .populate({
+            path: 'book',
+            select: '_id name authorName summary image createdAt updatedAt'
+        })
+        .populate({
+            path: 'user',
+            select: '_id username email role createdAt updatedAt'
+        })
+        .sort(sortStr)
+        .skip(page*limit -limit)
+        .limit(limit)
+
+    if(bookIssues.length === 0)throw error('Requested Resource not found',400)
+    
+    return bookIssues;
+}
 module.exports={
     findUserByEmail,
     userExit,
@@ -143,6 +167,7 @@ module.exports={
     count,
     findSingleItem,
     updateItemPatch,
-    removeItem
+    removeItem,
+    findBookIssuesByUserId
 
 }

@@ -7,6 +7,7 @@ router
     .get('/users/:id',userController.findSingleItem)
     .patch('/users/:id',userController.updateItemPatch)
     .delete('/users/:id',userController.removeItem)
+    .get('/users/:id/bookIssues',userController.findBookIssuesByUserId)
 
 
 

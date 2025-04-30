@@ -37,9 +37,11 @@ const findAllItems=async({page,limit,sort_type,sort_by})=>{
    
 }
 
-const count=()=>{
-    return BookIssue.countDocuments()
+const count=(id)=>{
+    const filter=id? {user:id}:{}
+    return BookIssue.countDocuments(filter)
 }
+
 
 const updateItemPatch=async({id,status})=>{
 

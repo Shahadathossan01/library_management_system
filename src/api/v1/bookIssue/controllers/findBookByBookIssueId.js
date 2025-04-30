@@ -1,6 +1,7 @@
 const { isValidObjectId } = require("mongoose")
 const error = require("../../../../utils/error")
 const bookIssueService=require('../../../../lib/bookIssue')
+
 const findBookByBookIssueId=async(req,res,next)=>{
     const {id}=req.params
     if(!id) throw error('Id is required',400)
