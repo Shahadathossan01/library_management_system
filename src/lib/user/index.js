@@ -78,12 +78,56 @@ const findSingleItem=async(id)=>{
     return user;
 }
 
+const updateItemPatch=async({id,username,firstName, lastName,city,village,phone,dateOfBirth,avator,role})=>{
+
+    //update user
+    const user=await User.findById(id).select('-password')
+        
+    if(!user) throw error('User not found',400)
+    
+    user.username=username ?? user.username;
+    user.role=role ?? user.role
+
+    //update profile
+    const profile=await Profile.findOne({user:user._id})
+
+    const payload={
+        firstName,
+        lastName,
+        city,
+        village,
+        phone,
+        dateOfBirth,
+        avator
+    }
+    
+    Object.keys(payload).forEach((key)=>{
+        profile[key]=payload[key] ?? profile[key]
+    })
+
+    //save updated user and profile to database
+    await user.save()
+    await profile.save()
+
+    //find updated user after update user and profile
+    const updatedUser=await User.findById(id)
+        .select('-password')
+        .populate({
+            path: 'profile',
+            select:'firstName lastName city village phone dateOfBirth avator -user',
+            strictPopulate:false
+        })
+
+    return updatedUser;
+}
+
 module.exports={
     findUserByEmail,
     userExit,
     createUser,
     findAllItems,
     count,
-    findSingleItem
+    findSingleItem,
+    updateItemPatch
 
 }

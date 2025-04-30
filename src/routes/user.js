@@ -5,6 +5,7 @@ router
     .get('/users',userController.findAllItems)
     .post('/users',userController.create)
     .get('/users/:id',userController.findSingleItem)
+    .patch('/users/:id',userController.updateItemPatch)
 
 
 

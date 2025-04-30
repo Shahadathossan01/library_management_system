@@ -5,8 +5,6 @@ const userSchema=new Schema({
     username:{
         type: String,
         maxLength: 50,
-        minLength: 5,
-        required: true
     },
     email:{
         type: String,
@@ -33,7 +31,8 @@ const userSchema=new Schema({
 userSchema.virtual('profile',{
     ref:'Profile',
     localField:'_id',
-    foreignField:'user'
+    foreignField:'user',
+    justOne: true
 })
 
 const User=model('User',userSchema)
