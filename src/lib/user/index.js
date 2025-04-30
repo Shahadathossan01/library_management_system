@@ -1,4 +1,6 @@
+const BookIssue = require("../../model/BookIssue");
 const Profile = require("../../model/Profile");
+const Review = require("../../model/Review");
 const User = require("../../model/User");
 const error = require("../../utils/error");
 
@@ -121,6 +123,18 @@ const updateItemPatch=async({id,username,firstName, lastName,city,village,phone,
     return updatedUser;
 }
 
+const removeItem=async(id)=>{
+    const user=await User.findById(id)
+    if(!user) error('User not found',400)
+
+    await Profile.deleteOne({user:user._id})
+    await BookIssue.deleteMany({user:user._id})
+    await Review.deleteMany({user:user._id})
+
+    return await User.findByIdAndDelete(id)
+
+
+}
 module.exports={
     findUserByEmail,
     userExit,
@@ -128,6 +142,7 @@ module.exports={
     findAllItems,
     count,
     findSingleItem,
-    updateItemPatch
+    updateItemPatch,
+    removeItem
 
 }
