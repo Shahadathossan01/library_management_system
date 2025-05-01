@@ -1,40 +1,51 @@
-📚 Library Management System – REST API
-This is a Library Management System Web Application built with a focus on role-based access control. It allows users to browse, review, and request books, while administrators manage all data and user activities through protected API endpoints.
+# 📚 Library Management System – REST API
 
-🚀 Getting Started
-Follow these steps to set up and run the project on your local machine:
+This is a **Library Management System** built with **Node.js**, **Express.js**, **MongoDB**, and **Docker**. It supports role-based access control, enabling users to browse, review, and request books, while administrators manage users, books, and reviews through protected API endpoints.
 
-🧰 Prerequisites
-Docker is installed and running
-Node.js installed (v16+ recommended)
-Git installed
-A code editor like VS Code
-🛠️ Installation
-Clone the repository
+---
 
-git clone https://github.com/your-username/library-management-system.git
-cd library-management-system
-Install dependencies
+## 🚀 Getting Started
 
-npm install
-⚙️ Environment Variables Create a .env file in the root directory and add the following:
+You can follow these instructions to set up and run the project locally using Docker.
 
-PORT=4000
-DB_CONNECTION_URL=mongodb://<username>:<password>@localhost:27017/?authSource=admin
-DB_USERNAME=SHAHADAT
-DB_PASSWORD=SHAHADATpass2456
-DB_NAME=library_management_system
-ACCESS_TOKEN_SECRET=b9c89e83b0b37973a1bfldjfldfj4rfdjflksj1d748f10a61ffdb6a5e984b92e86cfa3c0d8f
-Start Docker
+### 🧰 Prerequisites
 
-Ensure Docker Desktop is running
-Start services with Docker Compose
+- Docker is installed and running
+- Node.js (v16 or above)
+- Git
+- A code editor (e.g., VS Code)
+- 
+### 🛠️ Installation
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/library-management-system.git
+   cd library-management-system
 
- docker-compose up -d
-Run the development server
+2. **Install dependencies**
+   ```bash
+   npm install
+2. **Configure environment variables** Create a .env file in the root directory and add:
+   ```bash
+   PORT=4000
+   DB_CONNECTION_URL=mongodb://<username>:<password>@localhost:27017/?authSource=admin
+   DB_USERNAME=SHAHADAT
+   DB_PASSWORD=SHAHADATpass2456
+   DB_NAME=library_management_system
+   ACCESS_TOKEN_SECRET=b9c89e83b0b37973a1bfldjfldfj4rfdjflksj1d748f10a61ffdb6a5e984b92e86cfa3c0d8f
 
- npm run dev
-🧪 Tech Stack
+2. **🐳 Docker Setup**
+   - Start Docker Desktop
+   - Start services using Docker Compose
+   ```bash
+   docker-compose up -d
+
+2. **🔧 Run the Application**
+   ```bash
+   npm run dev     # Start the server in development mode
+   npm start       # Start the server in production mode
+
+
+### 🧪 Tech Stack
 Backend: Node.js, Express.js
 Database: MongoDB (via Docker)
 Authentication: JWT
