@@ -1,7 +1,7 @@
 const error = require("../utils/error");
 
 const authorize=(roles=['admin'])=>(req,_res,next)=>{
-    console.log(req.user.role)
+    
     if(roles.includes(req.user.role)){
         return next()
     }

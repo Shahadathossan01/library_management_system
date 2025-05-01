@@ -6,7 +6,7 @@ const router=require('express').Router()
 
 router
     .post('/bookIssues',authenticate,authorize(['user']),bookIssueController.create)
-    .get('/bookIssues',authenticate,authorize(['user','admin']),bookIssueController.findAllItems)
+    .get('/bookIssues',authenticate,authorize(['admin']),bookIssueController.findAllItems)
     .patch('/bookIssues/:id',authenticate,authorize(['user','admin']),bookIssueController.updateItemPatch)
     .delete('/bookIssues/:id',authenticate,authorize(['admin']),ownerShip('BookIssue'),bookIssueController.removeItem)
     .get('/bookIssues/:id',authenticate,authorize(['user','admin']),bookIssueController.findSingleItem)
