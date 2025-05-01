@@ -14,7 +14,7 @@ You can follow these instructions to set up and run the project locally using Do
 - Node.js (v16 or above)
 - Git
 - A code editor (e.g., VS Code)
-- 
+
 ### 🛠️ Installation
 1. **Clone the repository**
    ```bash
@@ -46,40 +46,48 @@ You can follow these instructions to set up and run the project locally using Do
 
 
 ### 🧪 Tech Stack
-Backend: Node.js, Express.js
-Database: MongoDB (via Docker)
-Authentication: JWT
-Containerization: Docker & Docker Compose
-📜 Scripts
-docker-compose up -d – Start MongoDB and other services via Docker
-npm run dev – Run the app in development mode
-npm start – Start the server in production mode
-docker-compose down – Stop and remove containers
-🔍 Overview
-Public users can view the list of books.
-Authenticated users can request (issue) books, write, update, and delete their reviews.
-Admins can manage books (create, update, delete), manage users and their roles, handle book issues, Moderate all reviews.
-✅ Features
-Authentication & User Management
-User registration and secure login
-Role-based access: User vs Admin
-Admin privileges: Create, update, and delete users. Reset user passwords.
-📚 Book Management
-Book details include: name, author, image, and summary
-Publicly accessible book list
-Admin controls: Add, update, and delete books
-✍️ Review System
-Authenticated users can create, update, and delete their reviews.
-View all reviews
-Admins can manage all reviews
-📦 Book Issue Management
-Authenticated users can request books and cancel book requests.
-Admin capabilities: Update and delete book issues
-🛡️ Security
-Passwords are hashed and salted
-JWT authentication
-Secure endpoints for protected routes
-⚙️ Non-Functional Requirements
-Performance: Handles concurrent requests with optimised response times
-Scalability: Supports horizontal scaling
-Reliability: Robust error handling and logging
+- Backend: Node.js, Express.js
+- Database: MongoDB (via Docker)
+- Authentication: JWT
+- Containerization: Docker & Docker Compose
+
+### 📜 Scripts
+- docker-compose up -d – Start MongoDB and other services via Docker
+- npm run dev – Run the app in development mode
+- npm start – Start the server in production mode
+- docker-compose down – Stop and remove containers
+  
+### 🔍 Overview
+- Public users can view the list of books.
+- Authenticated users can request (issue) books, write, update, and delete their reviews.
+- Admins can manage books (create, update, delete), manage users and their roles, handle book issues, Moderate all reviews.
+  
+### ✅ Features
+- Authentication & User Management
+- User registration and secure login
+- Role-based access: User vs Admin
+- Admin privileges: Create, update, and delete users. Reset user passwords.
+  
+### 📚 Book Management
+- Book details include: name, author, image, and summary
+- Publicly accessible book list
+- Admin controls: Add, update, and delete books
+  
+### ✍️ Review System
+- Authenticated users can create, update, and delete their reviews.
+- View all reviews
+- Admins can manage all reviews
+  
+### 📦 Book Issue Management
+- Authenticated users can request books and cancel book requests.
+- Admin capabilities: Update and delete book issues
+  
+### 🛡️ Security
+- Passwords are hashed and salted
+- JWT authentication
+- Secure endpoints for protected routes
+  
+### ⚙️ Non-Functional Requirements
+- Performance: Handles concurrent requests with optimised response times
+- Scalability: Supports horizontal scaling
+- Reliability: Robust error handling and logging
