@@ -1,10 +1,16 @@
 const bookService=require('../../../../lib/book')
+const uploadOnCloudinary = require('../../../../utils/cloudinary')
 const create=async(req,res,next)=>{
-    const {name,authorName,summary,image,inStock,status}=req.body
 
+    const localFilePath=req.file?.path
+    const cloudinaryResponse=await uploadOnCloudinary(localFilePath)
+    const imageUrl=cloudinaryResponse.url 
+
+    const {name,authorName,summary,inStock,status}=req.body
+    
     try{
         //create book
-        const book=await bookService.create({name,authorName,summary,image,inStock,status})
+        const book=await bookService.create({name,authorName,summary,image:imageUrl,inStock,status})
 
         //generate response
         const response={

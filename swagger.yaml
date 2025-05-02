@@ -226,9 +226,10 @@ paths:
       description: Create a new book 
       tags: [Book]
       requestBody:
+        required: true
         description: To create a new book useing valid data
         content:
-          'application/json':
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -243,12 +244,10 @@ paths:
                   example: This book provides a hands-on approach to implementing secure APIs using JSON Web Tokens (JWT). Aimed at web developers and backend engineers, it covers the fundamentals of JWT, token generation and validation, and best practices for authentication and authorization. Through real-world examples and step-by-step tutorials, readers will learn how to integrate JWT in various tech stacks, including Node.js, Express, and frontends like React. Whether you're building a small app or a large-scale system, this guide equips you with the tools to protect your endpoints and manage secure user sessions.
                 image:
                   type: string
-                  format: url
-                  example: http://aws.avator.og
+                  format: binary
                 inStock:
-                  type: integer
-                  format: int32
-                  example: 2
+                  type: string
+                  example: 21
                 status:
                   type: string
                   enum: [available,othersHand]
@@ -1332,11 +1331,15 @@ paths:
         - $ref: '#/components/parameters/idPathParam'
       requestBody:
         description: To update a bookIssue useing valid data
+        required: true
         content:
-          'application/json':
+          multipart/form-data:
             schema:
               type: object
               properties:
+                avator:
+                  type: string
+                  format: binary
                 username:
                   type: string
                   example: update username
@@ -1358,14 +1361,10 @@ paths:
                 dateOfBirth:
                   type: string
                   example: 17-05-2000
-                avator:
-                  type: string
-                  example: http://cloudinary
                 role:
                   type: string
                   enum: [user,admin]
                   default: user
-                
       responses:
         '200':
           description: Successfully updated
@@ -1522,6 +1521,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
+
 components:
   securitySchemes:
     bearerAuth:

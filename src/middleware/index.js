@@ -12,7 +12,8 @@ const applyMiddleware=(app)=>{
     app.use('/docs',swaggerUI.serve, swaggerUI.setup(swaggerDoc))
     app.use(
         OpenApiValidator.middleware({
-            apiSpec:'./swagger.yaml'
+            apiSpec:'./swagger.yaml',
+            ignorePaths: /\/api\/v1\/books/
         })
     )
 }
