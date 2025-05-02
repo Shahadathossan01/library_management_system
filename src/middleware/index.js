@@ -13,7 +13,7 @@ const applyMiddleware=(app)=>{
     app.use(
         OpenApiValidator.middleware({
             apiSpec:'./swagger.yaml',
-            ignorePaths: /\/api\/v1\/books/
+            ignorePaths: /\/api\/v1\/books(\/\d+)?|\/api\/v1\/books\/|\/api\/v1\/users(\/\d+)?/,
         })
     )
 }
