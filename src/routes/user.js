@@ -8,8 +8,8 @@ const upload = require('../middleware/multer.middleware')
 router
     .get('/users',authenticate,authorize(['admin']),userController.findAllItems)
     .post('/users',authenticate,authorize(['admin']),userController.create)
-    .get('/users/:id',authenticate,authorize(['admin']),userController.findSingleItem)
-    .patch('/users/:id',authenticate,authorize(['admin']),upload.single('avator'),userController.updateItemPatch)
+    .get('/users/:id',authenticate,authorize(['admin','user']),userController.findSingleItem)
+    .patch('/users/:id',authenticate,authorize(['admin','user']),upload.single('avator'),userController.updateItemPatch)
     .delete('/users/:id',authenticate,authorize(['admin']),ownerShip('User'),userController.removeItem)
     .get('/users/:id/bookIssues',authenticate,authorize(['user','admin']),userController.findBookIssuesByUserId)
 

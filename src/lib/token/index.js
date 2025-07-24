@@ -4,8 +4,7 @@ const error = require('../../utils/error')
 const generateToken=({payload,algorithm='HS256',secret=process.env.ACCESS_TOKEN_SECRET,expiresIn='5h'})=>{
     try{
         const access_token=jwt.sign(payload,secret,{
-            algorithm,
-            expiresIn
+            algorithm
         })
         return access_token;
     }catch(e){

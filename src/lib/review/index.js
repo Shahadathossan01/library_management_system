@@ -24,7 +24,11 @@ const findAllItems=async({id,page=defaults.page,
             .populate({
                 path:'user',
                 select: 'username email role createdAt updatedAt _id',
-                strictPopulate:false
+                strictPopulate:false,
+                populate:{
+                    path: 'profile',
+                    select:'firstName lastName avator'
+                }
             })
             .sort(sortStr)
             .skip(page*limit-limit)

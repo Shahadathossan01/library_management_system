@@ -6,6 +6,7 @@ const { bookIssueLinksGenerator } = require("../../../../utils/links")
 const bookIssueService=require('../../../../lib/bookIssue')
 const findBookIssuesByUserId=async(req,res,next)=>{
     const {id}=req.params
+    console.log(id)
     if(!id) throw error('Id is required',400)
 
     const validId=isValidObjectId(id)

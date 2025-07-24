@@ -34,15 +34,17 @@ const findAllItems=async({
 })=>{
     const sortStr=`${sort_type==='dsc' ? '-' : ''}${sort_by}`;
 
-     //filter books
+     //filter user
      const filter={
         $or:[
             {username:{$regex: search, $options: 'i'}},
-            {phone:{$regex: search, $options: 'i'}}
+            {phone:{$regex: search, $options: 'i'}},
+            {role:{$regex: search, $options: 'i'}},
         ]
     }
 
     const user=await User.find(filter)
+        .select('-password')
         .populate({
             path: 'profile',
             select:'firstName lastName city village phone dateOfBirth avator',

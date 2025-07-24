@@ -39,12 +39,12 @@ const getPagination=({
 
     //add next when page number is less then totalPage
     if(page<totalPage){
-        pagination.next=page+1
+        pagination.next=Number(page)+1
     }
 
     //add prev when page number is grater then 1
     if(page>1){
-        pagination.prev=page-1
+        pagination.prev=Number(page)-1
     }
 
     return pagination;

@@ -2,11 +2,11 @@ const error = require("../../../../utils/error")
 const isValidObjectId = require("../../../../utils/isValidObjectId")
 const reviewService=require('../../../../lib/review')
 const updateItemPatch=async(req,res,next)=>{
-
+    console.log(req.params)
     //check id is exit or not.
     const {id}=req.params
     if(!id) throw error('Id is required',400)
-    
+
     //if id exit then check id format (mongoose object)
     const isValid=isValidObjectId(id)
     if(!isValid) throw error('Invalid id format',400)

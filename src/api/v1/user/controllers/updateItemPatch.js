@@ -13,9 +13,9 @@ const updateItemPatch=async(req,res,next)=>{
     
     if(!req.body) throw error('Request Body is required',400)
 
-    const localFilePath=req.file?.path
+    const localFilePath=req?.file?.path
     const cloudinaryResponse=await uploadOnCloudinary(localFilePath)
-    const imageUrl=cloudinaryResponse.url 
+    const imageUrl=cloudinaryResponse?.url 
 
     const {username,firstName, lastName,city,village,phone,dateOfBirth,role}=req.body;
 

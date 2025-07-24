@@ -1,12 +1,22 @@
 const { sort_type, sort_by } = require("../../config/defaults")
 const Book = require("../../model/Book")
 const BookIssue = require("../../model/BookIssue")
-const Profile = require("../../model/Profile")
 const User = require("../../model/User")
 const error = require("../../utils/error")
 
 const create=async({book,user,status='pending'})=>{
     if(!book || !user) throw error('Invalid Parameters',400)
+    
+    // Check if the book exists
+    const findBook = await Book.findById(book);
+    if (!findBook) throw error('Book not found', 404);
+
+    // Check stock availability
+    if (findBook.inStock < 1) throw error('Book out of stock', 400);
+
+    // Decrease the stock
+    findBook.inStock = findBook.inStock - 1;
+    await findBook.save();
 
     const bookIssue=new BookIssue({user,book,status})
     await bookIssue.save()

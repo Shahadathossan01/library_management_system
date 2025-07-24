@@ -8,7 +8,6 @@ const findAllItems=async(req,res)=>{
     const sort_by=req.query.sort_by || defaults.sort_by;
     const search=req.query.search || defaults.search;
 
-
     try{
         const user=await userService.findAllItems({page,limit,sort_type,sort_by,search})
 
