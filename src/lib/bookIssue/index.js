@@ -31,7 +31,7 @@ const findAllItems=async({page,limit,sort_type,sort_by})=>{
     const bookIssues=await BookIssue.find()
         .populate({
             path: 'book',
-            select: '_id name authorName summary image createdAt updatedAt'
+            select: '_id name inStock authorName summary image createdAt updatedAt'
         })
         .populate({
             path: 'user',
@@ -59,12 +59,23 @@ const updateItemPatch=async({id,status})=>{
 
     const bookIssue=await BookIssue.findById(id).populate({
         path: 'book',
-        select: '_id name authorName summary image'
+        select: '_id name inStock authorName summary image'
     })
 
     if(!bookIssue) throw error('Resource not found',404)
     
     bookIssue.status=status ?? bookIssue.status;
+
+    if (status === 'public_hand' && bookIssue.book) {
+    bookIssue.book.inStock -= 1;
+    await bookIssue.book.save();  // Save the populated book
+    }
+
+    if (status === 'returned' && bookIssue.book) {
+    bookIssue.book.inStock += 1;
+    await bookIssue.book.save(); 
+    }
+
     await bookIssue.save()
 
     return bookIssue
