@@ -11,6 +11,9 @@ const create=async({book,user,status='pending'})=>{
     const findBook = await Book.findById(book);
     if (!findBook) throw error('Book not found', 404);
 
+    if(findBook.inStock===1){
+        findBook.status='out_of_stock'
+    }
     // Check stock availability
     if (findBook.inStock < 1) throw error('Book out of stock', 400);
 
@@ -24,11 +27,17 @@ const create=async({book,user,status='pending'})=>{
     return bookIssue._doc;
 }
 
-const findAllItems=async({page,limit,sort_type,sort_by})=>{
+const findAllItems=async({page,limit,sort_type,sort_by,search})=>{
     
     const sortStr=`${sort_type==='dsc' ? '-' :''}${sort_by}`
 
-    const bookIssues=await BookIssue.find()
+    const filter={
+        $or:[
+            {status:{$regex: search, $options:'i'}}
+        ]
+    }
+
+    const bookIssues=await BookIssue.find(filter)
         .populate({
             path: 'book',
             select: '_id name inStock authorName summary image createdAt updatedAt'
@@ -47,8 +56,12 @@ const findAllItems=async({page,limit,sort_type,sort_by})=>{
    
 }
 
-const count=(id)=>{
-    const filter=id? {user:id}:{}
+const count=({search=''})=>{
+    const filter={
+        $or:[
+            {status:{$regex: search, $options:'i'}}
+        ]
+    }
     return BookIssue.countDocuments(filter)
 }
 

@@ -12,7 +12,7 @@ const bookIssueSchema=new Schema({
     },
     status:{
         type: String,
-        enum: ['pending','cancelled','overDue','returned','public_hand'],
+        enum: ['pending','cancelled','overdue','returned','public_hand'],
         default: 'pending'
     }
 },{timestamps:true})

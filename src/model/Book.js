@@ -9,7 +9,7 @@ const bookSchema = new Schema({
     inStock: Number,
     status: {
       type: String,
-      enum: ['available', 'othersHand'],
+      enum: ['available', 'out_of_stock'],
       default: 'available'
     }
   }, {

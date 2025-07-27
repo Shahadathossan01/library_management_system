@@ -117,6 +117,14 @@ const updateItemPatch=async({id,name,authorName,summary,image,inStock,status})=>
         status
     }
 
+    if(inStock>=1){
+        payload.status='available'
+    }
+
+    if(inStock <=0){
+        payload.status='out_of_stock'
+    }
+
     Object.keys(payload).forEach((key)=>{
         book[key]=payload[key] ?? book[key]
     })

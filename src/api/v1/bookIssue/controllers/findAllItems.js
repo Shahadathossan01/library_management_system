@@ -7,10 +7,11 @@ const findAllItems=async(req,res,next)=>{
     const limit=req.query.limit || defaults.limit;
     const sort_type=req.query.sort_type || defaults.sort_type;
     const sort_by=req.query.sort_by || defaults.sort_by;
+    const search=req.query.search || defaults.search;
 
     try{
         //get bookIssues
-        const bookIssues=await bookIssueService.findAllItems({page,limit,sort_type,sort_by})
+        const bookIssues=await bookIssueService.findAllItems({page,limit,sort_type,sort_by,search})
 
         //get transform bookIssues and generate HATEOAS links
         const data=query.getTransformedItems({
@@ -20,7 +21,7 @@ const findAllItems=async(req,res,next)=>{
         })
 
         //generate pagination
-        const totalItems=await bookIssueService.count()
+        const totalItems=await bookIssueService.count({search})
         const pagination=query.getPagination({totalItems,page,limit})
 
         //generate links

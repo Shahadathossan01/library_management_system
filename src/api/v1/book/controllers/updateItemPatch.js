@@ -14,8 +14,6 @@ const updateItemPatch=async(req,res,next)=>{
     const imageUrl=cloudinaryResponse?.url 
     
     const {name,authorName,summary,inStock,status}=req.body
-    console.log(req.body.name)
-    console.log(id)
 
     try{
         const book=await bookService.updateItemPatch({id,name,authorName,summary,image:imageUrl,inStock,status})
