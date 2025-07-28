@@ -16,7 +16,7 @@ const create=async({content,book,user,status='public'})=>{
 
 const findAllItems=async({id,page=defaults.page,
     limit=defaults.limit,sort_type=defaults.sort_type,
-        sort_by=defaults.sort_by,})=>{
+        sort_by='createdAt',})=>{
 
         const sortStr=`${sort_type==='dsc' ? '-' : ''}${sort_by}`;
         const filter=id? {book:id}:{}

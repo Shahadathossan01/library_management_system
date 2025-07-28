@@ -29,7 +29,8 @@ const findAllItems=async({
     const filter={
         $or:[
             {name:{$regex: search, $options: 'i'}},
-            {authorName:{$regex: search, $options: 'i'}}
+            {authorName:{$regex: search, $options: 'i'}},
+            {status:{$regex: search, $options: 'i'}},
         ]
     }
 
@@ -37,8 +38,6 @@ const findAllItems=async({
         .sort(sortStr)
         .skip(page*limit-limit)
         .limit(limit)
-
-        if(books.length===0) throw error('Requested resource not found',404)
     
     return books.map(book=>({
         ...book._doc

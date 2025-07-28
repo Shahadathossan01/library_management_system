@@ -6,7 +6,9 @@ const create=async(req,res,next)=>{
     const cloudinaryResponse=await uploadOnCloudinary(localFilePath)
     const imageUrl=cloudinaryResponse.url 
 
-    const {name,authorName,summary,inStock,status}=req.body
+    const {name,authorName,summary,inStock}=req.body
+     const numericStock = Number(inStock); // Ensure inStock is a number
+    const status = numericStock === 0 ? 'out_of_stock' : 'available';
     
     try{
         //create book
