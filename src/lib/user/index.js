@@ -156,8 +156,6 @@ const findBookIssuesByUserId=async({id,page,limit,sort_type,sort_by})=>{
         .sort(sortStr)
         .skip(page*limit -limit)
         .limit(limit)
-
-    if(bookIssues.length === 0)throw error('Requested Resource not found',400)
     
     return bookIssues;
 }
