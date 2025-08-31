@@ -5,10 +5,15 @@ const swaggerUI = require("swagger-ui-express");
 const YAML = require("yamljs");
 const OpenApiValidator = require("express-openapi-validator");
 const swaggerDoc = YAML.load("./swagger.yaml");
+const corsOptions = {
+  origin: "http://localhost:5173", // Vite dev server
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true,
+};
 const applyMiddleware = (app) => {
   app.use(express.json());
   app.use(morgan("dev"));
-  app.use(cors());
+  app.use(cors(corsOptions));
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
   app.use(
     OpenApiValidator.middleware({
