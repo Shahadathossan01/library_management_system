@@ -9,16 +9,7 @@ const swaggerDoc = YAML.load("./swagger.yaml");
 const applyMiddleware = (app) => {
   app.use(express.json());
   app.use(morgan("dev"));
-  app.use(
-    cors({
-      origin: [
-        "http://localhost:5173",
-        "http://194.164.149.161:4173",
-        "https://library-management-system-client-gamma.vercel.app/",
-      ],
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    })
-  );
+  app.use(cors());
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
   app.use(
     OpenApiValidator.middleware({
