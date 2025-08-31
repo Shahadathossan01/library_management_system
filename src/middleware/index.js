@@ -11,7 +11,11 @@ const applyMiddleware = (app) => {
   app.use(morgan("dev"));
   app.use(
     cors({
-      origin: ["http://localhost:5173", "http://194.164.149.161:4173"],
+      origin: [
+        "http://localhost:5173",
+        "http://194.164.149.161:4173",
+        "https://library-management-system-client-gamma.vercel.app/",
+      ],
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     })
   );
